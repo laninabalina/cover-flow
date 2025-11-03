@@ -17,3 +17,17 @@ I added a minimal Android app that lets you paste a URL and download it to the d
 - Files are saved to the public Downloads directory with a guessed filename.
 
 Project path: `android-app/`
+
+## CI: Build APK and Artifacts
+
+A GitHub Actions workflow is added at `.github/workflows/build-apk.yml` to automatically build the debug APK and upload it as a workflow artifact.
+
+How to use:
+- Push to `main` or trigger manually via “Run workflow”.
+- After the job completes, download `app-debug.apk` from the workflow’s Artifacts section.
+
+The workflow:
+- Sets up JDK 17 and Android SDK (API 34, Build Tools 34.0.0)
+- Installs Gradle via apt
+- Runs `gradle assembleDebug` in `android-app/`
+- Uploads `android-app/app/build/outputs/apk/debug/app-debug.apk` as `app-debug`
