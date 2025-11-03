@@ -24,14 +24,19 @@ jobs:
 
       - name: Install Android SDK components
         run: |
-          sdkmanager --licenses || true
+          yes | sdkmanager --licenses || true
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Install Gradle
+      - name: Install Gradle 8.6
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gradle
-          gradle --8
+          GRADLE_VERSION=8.6
+          curl -sLo gradle.zip https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip
+          unzip -q gradle.zip
+          echo "GRADLE_HOME=$PWD/gradle-${GRADLE_VERSION}" >> $GITHUB_ENV
+          echo "$PWD/gradle-${GRADLE_VERSION}/bin" >> $GITHUB_PATH
+
+      - name: Verify Gradle
+        run: gradle --version
 
       - name: Build APK (debug)
         working-directory: android-app
